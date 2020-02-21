@@ -17,7 +17,7 @@ const processFilterParams = filterParams => {
         sort: '',
     };
 
-    let refinementNumber = 0;
+    //let refinementNumber = 0;
 
     filterParams.forEach(filter => {
         if (filter.id === 'sort') {
@@ -29,7 +29,6 @@ const processFilterParams = filterParams => {
             // ] = `${filter.id}=${filter.value}`;
 
             filterParamQuery.refine.push(`${filter.id}=${filter.value}`);
-
         }
     });
 
@@ -96,9 +95,7 @@ export const resolver = config => {
             productSearch: (_, { query, filterParams }) => {
                 const result = searchProduct(config, query, filterParams).then(
                     searchResult => {
-                        //return new SearchResult(searchResult, filterParams);
-                        let tempResult = new SearchResult(searchResult, filterParams);
-                        return tempResult;
+                        return new SearchResult(searchResult, filterParams);
                     },
                 );
                 return result;
