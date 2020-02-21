@@ -12,7 +12,8 @@ const logger = core.logger;
 
 const processFilterParams = filterParams => {
     let filterParamQuery = {
-        refine: {},
+        //refine: {},
+        refine: [],
         sort: '',
     };
 
@@ -22,10 +23,13 @@ const processFilterParams = filterParams => {
         if (filter.id === 'sort') {
             filterParamQuery.sort = filter.value;
         } else {
-            refinementNumber++;
-            filterParamQuery.refine[
-                `refine_${refinementNumber}`
-            ] = `${filter.id}=${filter.value}`;
+            // refinementNumber++;
+            // filterParamQuery.refine[
+            //     `refine_${refinementNumber}`
+            // ] = `${filter.id}=${filter.value}`;
+
+            filterParamQuery.refine.push(`${filter.id}=${filter.value}`);
+
         }
     });
 
@@ -66,8 +70,10 @@ const searchProduct = async (config, query, filterParams) => {
         q: query,
     };
 
-    if (filters.refine && Object.entries(filters.refine).length !== 0) {
-        Object.assign(parameterValue, filters.refine);
+    //if (filters.refine && Object.entries(filters.refine).length !== 0) {
+    if (filters.refine && filters.refine.length !== 0) {
+        //Object.assign(parameterValue, filters.refine);
+        parameterValue.refine = filters.refine;
     }
 
     if (filters.sort) {
@@ -90,7 +96,9 @@ export const resolver = config => {
             productSearch: (_, { query, filterParams }) => {
                 const result = searchProduct(config, query, filterParams).then(
                     searchResult => {
-                        return new SearchResult(searchResult, filterParams);
+                        //return new SearchResult(searchResult, filterParams);
+                        let tempResult = new SearchResult(searchResult, filterParams);
+                        return tempResult;
                     },
                 );
                 return result;
